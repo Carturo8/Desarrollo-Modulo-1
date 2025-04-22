@@ -1,5 +1,15 @@
-# Solicitar el nombre del producto
-producto = str(input("Ingresa el nombre del producto: ").strip().lower())
+import re
+
+# Solicitar y validar el nombre del producto
+while True:
+    producto = input("Ingresa el nombre del producto: ").strip()
+    if len(producto) > 25:
+        print("El nombre del producto no debe exceder los 25 caracteres.")
+    elif not re.fullmatch(r"[A-Za-zÁÉÍÓÚáéíóúÑñ ]+", producto):
+        print("Entrada inválida. Ingresa un nombre válido.")
+    else:
+        producto = producto.title()
+        break
 
 # Solicitar y validar el precio unitario
 while True:
@@ -38,7 +48,7 @@ while True:
 total = round(precio * cantidad, 2) 
 
 # Calcular el total con descuento
-valor_descuento = total * descuento/100
+valor_descuento = round(total * descuento/100, 2)
 total_dc = round(total - valor_descuento, 2)
 
 # Mostrar la información del producto y el total con descuento
@@ -46,8 +56,8 @@ print("=====================================")
 print("Información del Producto:")
 print("=====================================")
 print(f"Nombre del Producto: {producto}")
-print(f"Precio Unitario: ${precio}")
+print(f"Precio Unitario: $ {precio}")
 print(f"Cantidad: {cantidad}")
-print(f"Descuento: {descuento}% -- Valor: ${valor_descuento}")
-print(f"Precio Total sin Descuento: ${total}")
-print(f"Precio Total con Descuento: ${total_dc}")
+print(f"Precio Total sin Descuento: $ {total}")
+print(f"Descuento: {descuento}% -- Valor: $ {valor_descuento}")
+print(f"Precio Total con Descuento: $ {total_dc}")
