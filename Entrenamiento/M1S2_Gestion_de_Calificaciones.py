@@ -1,5 +1,5 @@
 """Desarrolla un programa en Python que gestione una serie de calificaciones y estadísticas de manera interactiva."""
-
+a=0
 def Validar_Calificacion(calificacion):
     """
     Función para validar una calificación.
