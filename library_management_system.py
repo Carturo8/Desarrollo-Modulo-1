@@ -261,6 +261,8 @@ def search_book() -> None:
         else:
             print("\n❌ Invalid option. Please choose 1 or 2.")
 
+# ----- UPDATE BOOK INFO -----
+
 def update_book_info() -> None:
     if not book_catalog:
         print("\n📭 The book catalog is empty. No books to update.")
@@ -277,40 +279,46 @@ def update_book_info() -> None:
         if matching_books:
             book = matching_books[0]
             print(f"\n📘 Book found: {book['title']} by {', '.join(book['author'])}")
-            print("\n⚙️ What would you like to update?")
-            print("1️⃣ Quantity Available")
-            print("2️⃣ Replacement Price")
-            print("3️⃣ Both")
-            print("0️⃣ Cancel")
-            option = input("Enter your choice: ").strip()
+            condition_2 = True
+            while condition_2:
+                print("\n⚙️ What would you like to update?")
+                print("1️⃣ Quantity Available")
+                print("2️⃣ Replacement Price")
+                print("3️⃣ Both")
+                print("0️⃣ Cancel")
+                option = input("\nEnter your choice: ").strip()
+                if option == "1":
+                    book["quantity_available"] = validate_book_quantity_available()
+                    print(f"The quantity available has been updated to {book['quantity_available']}.")
+                    condition_2 = False
 
-            if option == "1":
-                validate_book_quantity_available()
+                elif option == "2":
+                    book["replacement_price"] = validate_book_replacement_price()
+                    print(f"The replacement price has been updated to ${book['replacement_price']}.")
+                    condition_2 = False
 
-            elif option == "2":
-                validate_book_replacement_price()
+                elif option == "3":
+                    book["quantity_available"] = validate_book_quantity_available()
+                    print(f"The quantity available has been updated to {book['quantity_available']}.")
+                    book["replacement_price"] = validate_book_replacement_price()
+                    print(f"The replacement price has been updated to ${book['replacement_price']}.")
+                    condition_2 = False
 
-            elif option == "3":
-                validate_book_quantity_available()
-                validate_book_replacement_price()
+                elif option == "0":
+                    print("🔙 Update cancelled.")
+                    condition_2 = False
 
-            elif option == "0":
-                print("🔙 Update cancelled.")
-                break
-
-            else:
-                print("❌ Invalid option. Please choose 1, 2, 3, or 0.")
-                continue
+                else:
+                    print("❌ Invalid option. Please choose 1, 2, 3, or 0.")
 
         else:
             print("\n❌ No book found with that title.")
 
-
-            # Ask if the user wants to update again
-            again = input("\n🔁 Do you want to update another field for this book? (y/n): ").strip().lower()
-            if again != "y":
-                condition = False
+        # Ask if the user wants to update again
+        again = input("\n🔁 Do you want to search again? (Press 'y' to continue / any other key to exit): ").strip().lower()
+        if again != "y":
+            condition = False
 
 #register_new_book()
 #search_book()
-update_book_info()
+#update_book_info()
