@@ -6,7 +6,7 @@ book_catalog = [
         "title": "Cien años de soledad",
         "author": ["Gabriel García Márquez"],
         "genre": "Magical Realism",
-        "year_of_publication": 1967,
+        "publication_year": 1967,
         "quantity_available": 5,
         "replacement_price": 5000
     },
@@ -14,7 +14,7 @@ book_catalog = [
         "title": "1984",
         "author": ["George Orwell"],
         "genre": "Dystopian",
-        "year_of_publication": 1949,
+        "publication_year": 1949,
         "quantity_available": 3,
         "replacement_price": 4200
     },
@@ -22,7 +22,7 @@ book_catalog = [
         "title": "To Kill a Mockingbird",
         "author": ["Harper Lee"],
         "genre": "Classic",
-        "year_of_publication": 1960,
+        "publication_year": 1960,
         "quantity_available": 4,
         "replacement_price": 4600
     },
@@ -30,7 +30,7 @@ book_catalog = [
         "title": "The Great Gatsby",
         "author": ["F. Scott Fitzgerald"],
         "genre": "Novel",
-        "year_of_publication": 1925,
+        "publication_year": 1925,
         "quantity_available": 2,
         "replacement_price": 3900
     },
@@ -38,7 +38,7 @@ book_catalog = [
         "title": "Don Quijote de la Mancha",
         "author": ["Miguel de Cervantes", "Pepito Perez"],
         "genre": "Novel",
-        "year_of_publication": 1805,
+        "publication_year": 1805,
         "quantity_available": 3,
         "replacement_price": 7500
     },
@@ -46,7 +46,7 @@ book_catalog = [
         "title": "Papi",
         "author": ["Miguel de Cervantes", "Pepito Perez"],
         "genre": "Novelaa",
-        "year_of_publication": 1905,
+        "publication_year": 1905,
         "quantity_available": 5,
         "replacement_price": 6500
     },
@@ -54,7 +54,7 @@ book_catalog = [
         "title": "Niño",
         "author": ["Niño loco", "Pepito Perez"],
         "genre": "Novelaa",
-        "year_of_publication": 1905,
+        "publication_year": 1905,
         "quantity_available": 5,
         "replacement_price": 6500
     }
@@ -161,7 +161,7 @@ def get_book_details(book_title:str = "") -> dict:
         "title": book_title,
         "author": book_author,
         "genre": book_genre,
-        "year_of_publication": book_publication_year,
+        "publication_year": book_publication_year,
         "quantity_available": book_quantity_available,
         "replacement_price": book_replacement_price
     }
@@ -270,6 +270,7 @@ def update_book_info() -> None:
 
     condition = True
     while condition:
+
         book_title = normalize(validate_book_title())
         matching_books = [
             book for book in book_catalog
@@ -319,6 +320,77 @@ def update_book_info() -> None:
         if again != "y":
             condition = False
 
+def delete_book_by_title() -> None:
+    condition = True
+    while condition:
+
+        book_title = input("\n📚 Enter the title of the book you want to delete: ").strip()
+        normalized_title = normalize(book_title)
+
+        # Buscar el libro por su título
+        matching_books = [
+            book for book in book_catalog if normalize(book["title"]) == normalized_title
+        ]
+
+        if matching_books:
+            print(
+                f"\n📖 Found the following book: {matching_books[0]['title']} by {', '.join(matching_books[0]['author'])}")
+            print(f"   Quantity Available: {matching_books[0]['quantity_available']}")
+            print(f"   Replacement Price: ${matching_books[0]['replacement_price']}")
+
+            confirm = input(
+                f"\nAre you sure you want to delete '{matching_books[0]['title']}'? (y/n): ").strip().lower()
+            if confirm == 'y':
+                book_catalog.remove(matching_books[0])
+                print(f"\n✅ The book '{matching_books[0]['title']}' has been deleted from the catalog.")
+            else:
+                print("❌ Deletion cancelled.")
+        else:
+            print("\n❌ No book found with that title.")
+
+        again = input("\n🔁 Do you want to delete another book? (y/n): ").strip().lower()
+        if again != 'y':
+            condition = False
+
+
+def generate_reports() -> None:
+    if not book_catalog:
+        print("📭 The catalog is empty. No reports can be generated.")
+        return
+
+    print("\n📊 Generating Inventory Reports...\n")
+
+    # 1. Calcular el valor total de reposición del inventario
+    total_value = 0
+    for book in book_catalog:
+        total_value += book["replacement_price"] * book["quantity_available"]
+
+    print(f"💰 Total replacement value of the inventory: ${total_value:,.2f}")
+
+    # 2. Encontrar el libro más antiguo y más reciente por género
+    genre_groups = {}
+
+    for book in book_catalog:
+        genre = book["genre"]
+        if genre not in genre_groups:
+            genre_groups[genre] = []
+        genre_groups[genre].append(book)
+
+    print("\n📚 Oldest and Newest Book by Genre:\n")
+
+    for genre, books in genre_groups.items():
+        # Ordenar libros por año de publicación
+        sorted_books = sorted(books, key=lambda b: b["publication_year"])
+        oldest = sorted_books[0]
+        newest = sorted_books[-1]
+
+        print(f"🔸 Genre: {genre}")
+        print(f"    📖 Oldest: '{oldest['title']}' ({oldest['publication_year']}) by {', '.join(oldest['author'])}")
+        print(f"    📘 Newest: '{newest['title']}' ({newest['publication_year']}) by {', '.join(newest['author'])}")
+        print()
+
 #register_new_book()
 #search_book()
 #update_book_info()
+#delete_book_by_title()
+#generate_reports()
